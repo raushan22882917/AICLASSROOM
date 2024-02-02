@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter Table with Search</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CSS (ensure you have this included) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.18.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    .highlight-row {
+      border: 2px solid red;
+    }
+  </style>
+</head>
+<body>
+
+<section>
+    <div class="container mt-5">
+        <h2>Chapter Table</h2>
+        <!-- Search Bar with Icon -->
+        <div class="input-group mb-3">
+          <input type="text" id="searchInput" class="form-control" placeholder="Search by Chapter Name">
+          <div class="input-group-append">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <table class="table table-bordered" id="chapterTable">
+            <thead>
+                <tr>
+                    <th>Chapter</th>
+                    <th>PDF Link</th>
+                    <th>Online Resource Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Chapter 1</td>
+                    <td><a href="path/to/chapter1.pdf" target="_blank">Download PDF</a></td>
+                    <td><a href="https://example.com/chapter1" target="_blank">Online Resource</a></td>
+                </tr>
+                <tr>
+                    <td>Chapter 2</td>
+                    <td><a href="path/to/chapter2.pdf" target="_blank">Download PDF</a></td>
+                    <td><a href="https://example.com/chapter2" target="_blank">Online Resource</a></td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- Custom JavaScript for Search Functionality -->
+<script>
+  $(document).ready(function(){
+    // Add an input event listener to the search input
+    $('#searchInput').on('input', function(){
+      // Get the search query
+      var query = $(this).val().toLowerCase();
+
+      // Remove the highlight class from all rows
+      $('#chapterTable tbody tr').removeClass('highlight-row');
+
+      // Filter the table rows based on the search query
+      $('#chapterTable tbody tr').sort(function(a, b) {
+        var aContains = $(a).text().toLowerCase().includes(query);
+        var bContains = $(b).text().toLowerCase().includes(query);
+
+        if (aContains && !bContains) return -1;
+        if (!aContains && bContains) return 1;
+        return 0;
+      }).appendTo('#chapterTable tbody');
+
+      // Add the highlight class to the matching rows
+      $('#chapterTable tbody tr:contains("' + query + '")').addClass('highlight-row');
+    });
+  });
+
+  // Custom jQuery expression for case-insensitive :contains
+  $.expr[":"].contains = $.expr.createPseudo(function(arg) {
+    return function( elem ) {
+      return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+  });
+</script>
+
+</body>
+</html>
